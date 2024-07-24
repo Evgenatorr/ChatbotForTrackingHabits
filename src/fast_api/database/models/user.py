@@ -1,7 +1,7 @@
 from src.fast_api.database.database import Base
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import VARCHAR, INTEGER, BOOLEAN, DATE, BYTEA
+from sqlalchemy.dialects.postgresql import VARCHAR, INTEGER, BOOLEAN, DATE, BYTEA, TIMESTAMP
 
 
 class User(Base):
@@ -24,8 +24,17 @@ class Habit(Base):
     user_id: Column[INTEGER] = Column(INTEGER, ForeignKey('user.id'), nullable=False)
     title: Column[VARCHAR] = Column(VARCHAR(50), nullable=False)
     description: Column[VARCHAR] = Column(VARCHAR(300))
-    amount_days: Column[INTEGER] = Column(INTEGER, default=21)
-    done: Column[BOOLEAN] = Column(BOOLEAN)
-    start_date: Column[DATE] = Column(DATE)
 
     user = relationship(argument='User', back_populates="habits")
+    tracking_habit = relationship(argument='HabitTracking', back_populates="habit")
+
+
+class HabitTracking(Base):
+    __tablename__ = "habit_tracking"
+
+    id: Column[INTEGER] = Column(INTEGER, primary_key=True)
+    habit_id: Column[INTEGER] = Column(INTEGER, ForeignKey('user.id'), nullable=False)
+    alert_time: Column[TIMESTAMP] = Column(TIMESTAMP(timezone=True), nullable=False)
+    count: Column[INTEGER] = Column(INTEGER, default=0)
+
+    habit = relationship(argument='Habit', back_populates="tracking_habit")
