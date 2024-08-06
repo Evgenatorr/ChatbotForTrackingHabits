@@ -1,6 +1,6 @@
 from telebot.types import Message
 from config import settings
-from loader import bot
+from src.loader import bot
 
 
 @bot.message_handler(commands=["help"])

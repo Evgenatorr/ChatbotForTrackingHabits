@@ -2,7 +2,7 @@ import asyncio
 from telebot.asyncio_filters import StateFilter
 from src.bot.database.database import engine, Base
 from src.bot.utils_bot.set_bot_commands import set_default_commands
-from loader import bot
+from src.loader import bot
 
 
 async def start():

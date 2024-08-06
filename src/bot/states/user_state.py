@@ -7,7 +7,7 @@ from telebot.asyncio_handler_backends import State, StatesGroup
 class UserState(StatesGroup):
     registration = State()
     login = State()
-    main = State()
+    menu = State()
     create_habit = State()
     delete_habit = State()
     get_all_habits = State()

@@ -1,8 +1,8 @@
-"""Create tables
+"""create database
 
-Revision ID: e7e3fbb608a5
+Revision ID: 396c84214d9c
 Revises: 
-Create Date: 2024-07-24 21:26:18.098527
+Create Date: 2024-08-06 08:44:25.273318
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = "e7e3fbb608a5"
+revision: str = "396c84214d9c"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -40,7 +40,7 @@ def upgrade() -> None:
         sa.Column("description", sa.VARCHAR(length=300), nullable=True),
         sa.ForeignKeyConstraint(
             ["user_id"],
-            ["user.id"],
+            ["user.tg_user_id"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -52,7 +52,7 @@ def upgrade() -> None:
         sa.Column("count", sa.INTEGER(), nullable=True),
         sa.ForeignKeyConstraint(
             ["habit_id"],
-            ["user.id"],
+            ["habit.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )

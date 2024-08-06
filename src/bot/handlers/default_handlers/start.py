@@ -1,18 +1,16 @@
-from loader import bot
-import requests
+from src.loader import bot
 from telebot.types import Message
-from src.bot.states.info_contact import UserState
+from src.bot.states.user_state import UserState
 from config import settings
+from src.bot import schemas
 from src.bot.crud.create_token import create_token
-from src.bot.keyboards.button_login import login_button
+from src.bot.keyboards import button_login, button_menu
 import httpx
-
-session = requests.Session()
 
 
 @bot.message_handler(commands=['start'])
 async def send_welcome(message: Message):
-    await bot.send_message(message.chat.id, 'Welcome', reply_markup=login_button())
+    await bot.send_message(message.chat.id, 'Welcome', reply_markup=button_login.login_button())
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'login')
@@ -35,21 +33,21 @@ async def check_login(message: Message):
     }
 
     async with httpx.AsyncClient() as client:
-        response = await client.post(url=f'{settings.BASE_URL}/login', data=data)
+        response = await client.post(url=f'{settings.BASE_URL}/jwt/login', data=data)
 
     if response.status_code == 401:
         await bot.reply_to(message, 'Не корректный логин или пароль')
         return
 
-    token_data = {
-        'access_token': response.json()['access_token'],
-        'token_type': response.json()['token_type'],
-        'user_id': message.from_user.id
-    }
+    token_data = schemas.token.CreateToken(
+        access_token=response.json()['access_token'],
+        token_type=response.json()['token_type'],
+        user_tg_id=message.from_user.id,
+    )
     await create_token(token_data)
 
-    await bot.send_message(message.chat.id, 'Вы вошли')
-    await bot.set_state(message.from_user.id, None)
+    await bot.send_message(message.chat.id, 'Вы вошли', reply_markup=button_menu.menu_button())
+    await bot.delete_state(message.from_user.id, message.chat.id)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'registration')
@@ -73,7 +71,8 @@ async def check_login(message: Message):
         response = await client.post(f'{settings.BASE_URL}/registration', json=data)
 
     if response.status_code == 400:
-        await bot.reply_to(message, 'Такой логин уже существует', reply_markup=login_button())
+        await bot.reply_to(message, 'Такой логин уже существует', reply_markup=button_login.login_button())
         await bot.delete_state(message.from_user.id, message.chat.id)
         return
     await bot.send_message(message.from_user.id, 'Вы успешно зарегистрировались')
+    await bot.delete_state(message.from_user.id, message.chat.id)

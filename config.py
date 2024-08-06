@@ -48,7 +48,7 @@ class Bot(BaseModel):
     default_commands: tuple = (
         ("start", "Старт"),
         ("help", "Вывести справку"),
-        ("info", 'О себе')
+        ("menu", 'Меню')
     )
 
 

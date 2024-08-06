@@ -7,4 +7,4 @@ class TokenInfo(BaseModel):
 
 
 class CreateToken(TokenInfo):
-    user_id: int = Field(description='Telegram user id')
+    user_tg_id: int = Field(description='Telegram user id')

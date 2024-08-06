@@ -21,7 +21,7 @@ class Habit(Base):
     __tablename__ = "habit"
 
     id: Column[INTEGER] = Column(INTEGER, primary_key=True)
-    user_id: Column[INTEGER] = Column(INTEGER, ForeignKey('user.id'), nullable=False)
+    user_id: Column[INTEGER] = Column(INTEGER, ForeignKey('user.tg_user_id'), nullable=False)
     title: Column[VARCHAR] = Column(VARCHAR(50), nullable=False)
     description: Column[VARCHAR] = Column(VARCHAR(300))
 
@@ -33,7 +33,7 @@ class HabitTracking(Base):
     __tablename__ = "habit_tracking"
 
     id: Column[INTEGER] = Column(INTEGER, primary_key=True)
-    habit_id: Column[INTEGER] = Column(INTEGER, ForeignKey('user.id'), nullable=False)
+    habit_id: Column[INTEGER] = Column(INTEGER, ForeignKey('habit.id'), nullable=False)
     alert_time: Column[TIMESTAMP] = Column(TIMESTAMP(timezone=True), nullable=False)
     count: Column[INTEGER] = Column(INTEGER, default=0)
 

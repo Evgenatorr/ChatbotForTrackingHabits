@@ -1,15 +1,20 @@
-from loader import bot
-from telebot.types import Message
-from config import settings
-from src.bot.handlers.default_handlers.start import session
+from src.loader import bot
+from telebot.types import CallbackQuery
+from src.bot.utils_bot.get_user_jwt import get_user
+from src.bot.keyboards import button_login
 
 
-@bot.message_handler(commands=['info'])
-async def info(message: Message):
-    async with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
-        print(data)
-        if data is None:
-            await bot.send_message(message.chat.id, 'Войдите в аккаунт')
-        response = session.get(f'{settings.BASE_URL}/info', headers=data)
-    result = f'Логин: {response.json()['username']}\n'
-    await bot.send_message(message.chat.id, result)
+@bot.callback_query_handler(func=lambda call: call.data == 'info')
+async def info(call: CallbackQuery):
+    user = await get_user(call.from_user.id)
+    print(user)
+    if user:
+
+        result = f'Логин: {user['username']}'
+        await bot.send_message(call.message.chat.id, result)
+        return
+
+    await bot.send_message(
+        call.message.chat.id, 'Войдите или зарегистрируйтесь',
+        reply_markup=button_login.login_button()
+    )

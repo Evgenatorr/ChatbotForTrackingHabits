@@ -10,7 +10,7 @@ async def read_users(
         payload: dict = Depends(get_current_token_payload),
         user: schemas.user.UserOut = Depends(get_current_active_auth_user),
 ):
-
+    print(payload)
     iat = payload.get('iat')
 
     return {
