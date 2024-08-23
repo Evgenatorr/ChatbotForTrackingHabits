@@ -6,11 +6,12 @@ from config import settings
 
 engine = create_async_engine(settings.db.url_db_asyncpg)
 Base = declarative_base()
-async_session = sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession)
+AsyncSession = sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession)
+async_session = AsyncSession()
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
-    async with async_session.begin() as session:
+    async with AsyncSession.begin() as session:
         try:
             yield session
         except:

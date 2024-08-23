@@ -8,9 +8,9 @@ from src.fast_api import models
 router = APIRouter(tags=['Registration'])
 
 
-@router.post(path='/registration', response_model=schemas.user.UserOut)
+@router.post(path='/registration', response_model=schemas.user.BaseUserSchema)
 async def reg_user(
-        user: schemas.user.CreateUser,
+        user: schemas.user.CreateUserSchema,
         db: AsyncSession = Depends(get_async_session)
 ):
     user_in_db = await db.execute(select(models.user.User)

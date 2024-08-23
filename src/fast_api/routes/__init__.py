@@ -2,3 +2,9 @@ from . import get_info_user
 from . import lifespan
 from . import login_user
 from . import registration_user
+from . import create_habit
+from . import get_habit
+from . import get_list_habits
+from . import update_habit
+from . import delete_habit
+from . import set_reminder

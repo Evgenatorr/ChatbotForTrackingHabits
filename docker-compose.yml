@@ -14,11 +14,14 @@ services:
       - ./data/db:/var/lib/postgresql/data
     networks:
       - backend
+
   fastapi:
     container_name: "fastapi"
     build:
       dockerfile: src/fast_api/Dockerfile
     command: uvicorn src.loader:app --reload --host 0.0.0.0 --port 8000
+    env_file:
+      - ./.env
     ports:
       - "8000:8000"
     depends_on:
@@ -27,22 +30,25 @@ services:
       - .:/code
     networks:
       - backend
+
   bot:
     container_name: "bot"
     build:
       dockerfile: src/bot/Dockerfile
     command: python main.py
     restart: always
-    environment:
-      - BOT_TOKEN=${BOT_TOKEN}
+    env_file:
+      - ./.env
     ports:
       - "8080:8080"
     depends_on:
       - fastapi
+    volumes:
+      - .:/code
     networks:
       - backend
-    links:
-      - fastapi
+#    links:
+#      - fastapi
 
 #  cron_run:
 #    container_name: "cron_run"

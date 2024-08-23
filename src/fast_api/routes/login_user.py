@@ -67,7 +67,6 @@ async def get_current_auth_user(
         db: AsyncSession = Depends(get_async_session),
 ) -> models.user.User:
     username = payload.get("username")
-    print(username)
     user_in_db = await db.execute(select(models.user.User).where(
         models.user.User.username == username))
     if (user := user_in_db.one_or_none()) is not None:
@@ -79,7 +78,7 @@ async def get_current_auth_user(
 
 
 def get_current_active_auth_user(
-        user: schemas.user.UserOut = Depends(get_current_auth_user),
+        user: schemas.user.UserOutSchema = Depends(get_current_auth_user),
 ):
     if user.active:
         return user
@@ -91,7 +90,7 @@ def get_current_active_auth_user(
 
 @router.post(path='/login', response_model=schemas.token.TokenInfo)
 async def login(
-        user: schemas.user.UserOut = Depends(validate_user)
+        user: schemas.user.UserOutSchema = Depends(validate_user)
 ):
     jwt_payload = {
         'tg_user_id': user.tg_user_id,

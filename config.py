@@ -56,7 +56,7 @@ class Settings(BaseSettings):
     """
     Base settings for programm.
     """
-    BASE_HOST: str = 'localhost'
+    BASE_HOST: str = 'fastapi'
     BASE_PORT: str = '8000'
     BASE_URL: str = f'http://{BASE_HOST}:{BASE_PORT}'
     BOT_TOKEN: str = os.getenv('BOT_TOKEN')

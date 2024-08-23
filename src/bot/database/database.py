@@ -11,6 +11,6 @@ async_session: AsyncSession = AsyncSession()
 Base = declarative_base()
 
 
-def init_db() -> None:
-    """Инициализируем БД"""
-    Base.metadata.create_all(engine)
+# def init_db() -> None:
+#     """Инициализируем БД"""
+#     Base.metadata.create_all(engine)

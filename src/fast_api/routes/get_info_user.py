@@ -8,9 +8,9 @@ router = APIRouter(prefix='/jwt', tags=['JWT'])
 @router.get('/user/me')
 async def read_users(
         payload: dict = Depends(get_current_token_payload),
-        user: schemas.user.UserOut = Depends(get_current_active_auth_user),
+        user: schemas.user.UserOutSchema = Depends(get_current_active_auth_user),
 ):
-    print(payload)
+
     iat = payload.get('iat')
 
     return {

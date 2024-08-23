@@ -31,7 +31,7 @@ async def check_login(message: Message):
         'username': split_data_user[0],
         'password': split_data_user[1]
     }
-
+    await bot.delete_message(message.chat.id, message.id)
     async with httpx.AsyncClient() as client:
         response = await client.post(url=f'{settings.BASE_URL}/jwt/login', data=data)
 
@@ -67,6 +67,9 @@ async def check_login(message: Message):
         'tg_user_id': message.from_user.id,
         'role': role,
     }
+    
+    await bot.delete_message(message.chat.id, message.id)
+
     async with httpx.AsyncClient() as client:
         response = await client.post(f'{settings.BASE_URL}/registration', json=data)
 

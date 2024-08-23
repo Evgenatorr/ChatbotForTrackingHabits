@@ -17,9 +17,9 @@ class Token(Base):
     id: Column[int] = Column(Integer, primary_key=True)
     access_token: Column[str] = Column(String, nullable=False)
     token_type: Column[str] = Column(String, nullable=False)
-    user_id: Column[int] = Column(Integer, nullable=False)
+    user_tg_id: Column[int] = Column(Integer, nullable=False)
 
     @classmethod
     async def get_token_by_user_id(cls, user_tg_id: int):
-        token = await async_session.execute(select(cls).where(user_tg_id == cls.user_id))
+        token = await async_session.execute(select(cls).where(user_tg_id == cls.user_tg_id))
         return token.scalar()

@@ -1,13 +1,13 @@
 from src.loader import bot
 from telebot.types import CallbackQuery
-from src.bot.utils_bot.get_user_jwt import get_user
+from src.bot.utils_bot.get_user_jwt import get_header
 from src.bot.keyboards import button_login
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'info')
 async def info(call: CallbackQuery):
-    user = await get_user(call.from_user.id)
-    print(user)
+    user = await get_header(call.from_user.id)
+
     if user:
 
         result = f'Логин: {user['username']}'
