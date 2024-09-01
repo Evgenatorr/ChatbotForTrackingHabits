@@ -1,7 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.encoders import jsonable_encoder
-from typing import List, Sequence
-from src.fast_api import schemas
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import update
 from src.fast_api.database.database import get_async_session
@@ -25,18 +22,31 @@ async def update_habit(
         detail="object not found",
     )
 
+    conflict_exc = HTTPException(
+        status_code=status.HTTP_409_CONFLICT,
+        detail="object that already exists",
+    )
+
     tg_user_id = payload.get('tg_user_id')
-    habit_in_db = await models.user.Habit.get_habit_by_title(habit_title, tg_user_id)
+    habit_in_db = await models.habit.Habit.get_habit_by_title(habit_title, tg_user_id, db=db)
+
 
     if habit_in_db is None:
         raise unauthed_exc
 
+    if habit_update.title:
+        check_title_in_db = await models.habit.Habit.get_habit_by_title(habit_update.title, tg_user_id, db=db)
+        if check_title_in_db:
+            raise conflict_exc
+
     habit_data = habit_update.model_dump(exclude_unset=True)
+    print(habit_data)
     query = (
-        update(models.user.Habit)
-        .where(models.user.Habit.title == habit_title)
+        update(models.habit.Habit)
+        .where(models.habit.Habit.title == habit_title,
+               models.habit.Habit.user_id == tg_user_id)
         .values(**habit_data)
-        .returning(models.user.Habit)
+        .returning(models.habit.Habit)
     )
 
     result = await db.execute(query)

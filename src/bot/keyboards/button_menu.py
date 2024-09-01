@@ -13,11 +13,7 @@ def menu_button() -> InlineKeyboardMarkup:
 
     button = InlineKeyboardMarkup(row_width=1)
     button.add(
-        InlineKeyboardButton('О себе', callback_data='info'),
-        InlineKeyboardButton('Список привычек', callback_data='list_habit'),
-        InlineKeyboardButton('Редактировать привычку', callback_data='habit_edit'),
-        InlineKeyboardButton('Статистика привычек', callback_data='statistics_habit'),
-        InlineKeyboardButton('Установить напоминание', callback_data='set_reminder'),
+        InlineKeyboardButton('Привычки', callback_data='list_habit'),
         InlineKeyboardButton('Добавить привычку', callback_data='create_habit'),
     )
 

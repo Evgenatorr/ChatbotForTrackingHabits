@@ -1,0 +1,33 @@
+from src.loader import bot
+from telebot.types import CallbackQuery
+from src.bot.utils_bot.get_user_jwt import get_header
+from src.bot.states.edit_habit_states import EditHabitState
+from config import settings
+from src.loader import scheduler
+import httpx
+from httpx import Response
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'delete_reminder', state=EditHabitState.edite)
+async def reminder(call: CallbackQuery):
+    header = await get_header(call.from_user.id)
+
+    if header:
+        async with bot.retrieve_data(call.from_user.id) as data:
+            title_habit = data['title_habit']
+
+        if job := scheduler.get_job(job_id=f'{title_habit}'):
+            job.remove()
+
+            data = {
+                "alert_time": None
+            }
+
+            async with httpx.AsyncClient() as client:
+                response: Response = await client.patch(f'{settings.BASE_URL}/jwt/habit/reminder/{title_habit}',
+                                                        headers=header, json=data)
+
+            await bot.send_message(call.message.chat.id, f'<i>Напоминание на привычку "{title_habit}" удалено</i>')
+            return
+
+        await bot.send_message(call.message.chat.id, f'<i>Напоминание на привычку "{title_habit}" не установлено</i>')

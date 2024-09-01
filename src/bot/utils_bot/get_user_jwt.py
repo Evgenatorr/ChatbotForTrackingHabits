@@ -18,9 +18,9 @@ async def get_header(user_tg_id: int):
             response = await client.get(url=f'{settings.BASE_URL}/jwt/user/me', headers=header)
 
         if response.status_code == 401:
-            await bot.send_message(user_tg_id, 'Войдите', reply_markup=button_login.login_button())
+            await bot.send_message(user_tg_id, '<strong>Войди | Зарегистрируйся</strong>', reply_markup=button_login.login_and_reg_button())
             return
 
         return header
     else:
-        await bot.send_message(user_tg_id, 'Войдите', reply_markup=button_login.login_button())
+        await bot.send_message(user_tg_id, '<strong>Войди | Зарегистрируйся</strong>', reply_markup=button_login.login_and_reg_button())

@@ -15,7 +15,7 @@ async def new_habit(call: CallbackQuery):
         async with bot.retrieve_data(user_id=call.from_user.id) as data:
             data['header'] = header
 
-        await bot.send_message(call.message.chat.id, 'Введите название новой привычки:')
+        await bot.send_message(call.message.chat.id, '<i>Введите название новой привычки</i>')
 
 
 @bot.message_handler(state=CreateHabitState.add_title)
@@ -24,7 +24,7 @@ async def add_title_habit(message: Message):
     async with bot.retrieve_data(message.from_user.id) as data:
         data['habit_title'] = message.text
 
-    await bot.send_message(message.from_user.id, "Введите описание новой привычки:")
+    await bot.send_message(message.from_user.id, '<i>Введите описание новой привычки</i>')
 
 
 @bot.message_handler(state=CreateHabitState.add_description)
@@ -41,9 +41,10 @@ async def add_description_habit(message: Message):
                                          json=habit_info,
                                          headers=data['header'])
 
-    if response.status_code == 200:
-        await bot.send_message(message.from_user.id, "Привычка добавлена")
-        bot.delete_state(message.from_user.id)
+    if response.status_code == 201:
+        await bot.send_message(message.from_user.id, "<i>Привычка добавлена</i>")
+        await bot.delete_state(message.from_user.id)
         return
+
     elif response.status_code == 409:
-        await bot.send_message(message.from_user.id, "Такая привычка уже добавлена")
+        await bot.send_message(message.from_user.id, "<i>Такая привычка уже добавлена</i>")

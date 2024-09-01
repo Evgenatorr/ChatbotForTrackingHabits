@@ -1,5 +1,7 @@
 from fastapi import Depends, HTTPException, status, APIRouter
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+
 from src.fast_api.database.database import get_async_session, AsyncSession
 from src.fast_api.utils.jwt_utils import hash_password
 from src.fast_api import schemas
@@ -11,16 +13,18 @@ router = APIRouter(tags=['Registration'])
 @router.post(path='/registration', response_model=schemas.user.BaseUserSchema)
 async def reg_user(
         user: schemas.user.CreateUserSchema,
-        db: AsyncSession = Depends(get_async_session)
+        db: AsyncSession = Depends(get_async_session),
 ):
-    user_in_db = await db.execute(select(models.user.User)
-                                  .where(models.user.User.username == user.username))
+    user_in_db = await models.user.User.get_user_by_username(username=user.username,
+                                                             tg_user_id=user.tg_user_id,
+                                                             db=db,)
 
-    if user_in_db.one_or_none() is not None:
+    if user_in_db is not None:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="This login already exists",
+            status_code=status.HTTP_409_CONFLICT,
+            detail="This tg id already exists",
         )
+
     new_user = models.user.User(
         tg_user_id=user.tg_user_id,
         username=user.username,
@@ -30,4 +34,5 @@ async def reg_user(
 
     db.add(new_user)
     await db.commit()
+
     return new_user

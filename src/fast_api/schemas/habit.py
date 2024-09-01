@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, AwareDatetime
 from datetime import time
 from typing import Optional
 
@@ -11,22 +11,22 @@ class BaseHabitSchema(BaseModel):
 
 class HabitUpdateSchema(BaseModel):
 
-    title: str | None = None
-    description: str | None = None
+    title: Optional[str] = None
+    description: Optional[str] = None
 
-
-class HabitPublicSchema(BaseHabitSchema):
-    id: int = Field(description='Habit id in db')
-    user_id: int = Field(description='User id in telegram')
 
 
 class HabitTrackingSchema(BaseModel):
 
     habit_id: int = Field(description='Habit id')
-    alert_time: time = Field(description='Habit alert time')
+    alert_time: AwareDatetime | None = Field(description='Habit alert time')
     count: int = Field(description='Habit completion days counter')
 
+class HabitPublicSchema(BaseHabitSchema):
+    id: int = Field(description='Habit id in db')
+    user_id: int = Field(description='User id in telegram')
+    tracking_habit: list[HabitTrackingSchema]
 
-class AddReminderSchema(BaseModel):
+class SetReminderSchema(BaseModel):
 
-    alert_time: str = Field(description='Habit alert time')
+    alert_time: str | AwareDatetime | None = Field(description='Habit alert time')

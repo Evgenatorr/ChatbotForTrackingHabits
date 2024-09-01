@@ -1,13 +1,12 @@
-from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-def habit_button(header) -> ReplyKeyboardMarkup:
+def habit_button(habits) -> InlineKeyboardMarkup:
 
-    button = ReplyKeyboardMarkup(row_width=1)
-
+    button = InlineKeyboardMarkup(row_width=1)
     button.add(
-        KeyboardButton('Выполнить привычку'),
-        KeyboardButton('Изменить описание привычки'),
-        KeyboardButton('Удалить привычку')
+        *[InlineKeyboardButton(text=habit_name, callback_data=f'title_{habit_name}') for habit_name in habits],
+        InlineKeyboardButton(text='🔙', callback_data=f'back_to_menu')
     )
+
     return button

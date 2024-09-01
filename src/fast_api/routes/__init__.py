@@ -8,3 +8,4 @@ from . import get_list_habits
 from . import update_habit
 from . import delete_habit
 from . import set_reminder
+from . import performing_habit

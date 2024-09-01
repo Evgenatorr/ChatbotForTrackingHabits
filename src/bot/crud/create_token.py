@@ -3,7 +3,7 @@ from src.bot.database import models
 from src.bot import schemas
 
 
-async def create_token(token: schemas.token.CreateToken):
+async def insert_token_in_dblite(token: schemas.token.CreateToken):
     """Добавить токен в бд."""
 
     token_in_db = await models.Token.get_token_by_user_id(token.user_tg_id)

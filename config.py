@@ -46,7 +46,7 @@ class AuthJWT(BaseModel):
 
 class Bot(BaseModel):
     default_commands: tuple = (
-        ("start", "Старт"),
+        ("start", "Вход/Регистрация"),
         ("help", "Вывести справку"),
         ("menu", 'Меню')
     )

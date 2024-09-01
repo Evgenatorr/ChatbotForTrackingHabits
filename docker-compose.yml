@@ -52,7 +52,7 @@ services:
 
 #  cron_run:
 #    container_name: "cron_run"
-#    build: ./crontab
+#    build: ./scheduler
 #    command: cron -n
 #    depends_on:
 #      - bot

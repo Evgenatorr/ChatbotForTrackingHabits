@@ -19,8 +19,3 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
             raise
         finally:
             await session.close()
-
-
-# async def init_db():
-#     """Инициализируем БД"""
-#     await Base.metadata.create_all(engine)

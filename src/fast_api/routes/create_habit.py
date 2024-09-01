@@ -8,7 +8,7 @@ from src.fast_api.database import models
 router = APIRouter(prefix='/jwt', tags=['JWT'])
 
 
-@router.post('/habit/create', response_model=HabitPublicSchema)
+@router.post('/habit/create', response_model=HabitPublicSchema, status_code=status.HTTP_201_CREATED)
 async def create_habit(
         habit: BaseHabitSchema,
         db: AsyncSession = Depends(get_async_session),
@@ -20,12 +20,12 @@ async def create_habit(
     )
 
     tg_user_id = payload.get('tg_user_id')
-    habit_in_db = await models.user.Habit.get_habit_by_title(habit.title, tg_user_id)
+    habit_in_db = await models.habit.Habit.get_habit_by_title(habit.title, tg_user_id, db=db)
 
     if habit_in_db:
         raise unauthed_exc
 
-    habit_model = models.user.Habit(
+    habit_model = models.habit.Habit(
         user_id=tg_user_id,
         title=habit.title,
         description=habit.description
@@ -33,11 +33,11 @@ async def create_habit(
 
     db.add(habit_model)
     await db.flush()
-    habit_tracking_model = models.user.HabitTracking(
+
+    habit_tracking_model = models.habit.HabitTracking(
         habit_id=habit_model.id,
     )
-
     db.add(habit_tracking_model)
+    await db.refresh(habit_model)
     await db.commit()
-
     return habit_model
