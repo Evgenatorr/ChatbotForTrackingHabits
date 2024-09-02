@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import update
+from sqlalchemy import update, Result
+from sqlalchemy.sql.dml import ReturningUpdate
+
 from src.fast_api.database.database import get_async_session
 from .login_user import get_current_token_payload, get_current_active_auth_user
 from src.fast_api.schemas.habit import HabitUpdateSchema, HabitPublicSchema
 from src.fast_api.database import models
-
 
 router = APIRouter(prefix='/jwt', tags=['JWT'])
 
@@ -17,6 +18,10 @@ async def update_habit(
         db: AsyncSession = Depends(get_async_session),
         payload: dict = Depends(get_current_token_payload),
 ):
+    """
+    Функция patch запроса, обновляем название или описание привычки в базе данных
+    """
+
     unauthed_exc = HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail="object not found",
@@ -30,7 +35,6 @@ async def update_habit(
     tg_user_id = payload.get('tg_user_id')
     habit_in_db = await models.habit.Habit.get_habit_by_title(habit_title, tg_user_id, db=db)
 
-
     if habit_in_db is None:
         raise unauthed_exc
 
@@ -40,8 +44,8 @@ async def update_habit(
             raise conflict_exc
 
     habit_data = habit_update.model_dump(exclude_unset=True)
-    print(habit_data)
-    query = (
+
+    query: ReturningUpdate[tuple[models.habit.Habit]] = (
         update(models.habit.Habit)
         .where(models.habit.Habit.title == habit_title,
                models.habit.Habit.user_id == tg_user_id)
@@ -49,7 +53,7 @@ async def update_habit(
         .returning(models.habit.Habit)
     )
 
-    result = await db.execute(query)
+    result: Result[tuple[models.habit.Habit]] = await db.execute(query)
     await db.commit()
 
     return result.scalar()

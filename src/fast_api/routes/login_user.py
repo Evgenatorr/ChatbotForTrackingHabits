@@ -17,10 +17,15 @@ async def validate_user(
         user_data: Annotated[OAuth2PasswordRequestForm, Depends()],
         db: AsyncSession = Depends(get_async_session),
 ):
+    """
+    Функция проверяет пользователя в базе данных проверяет пароль на валидность
+    и возвращает пользователя, если данные валидны
+    """
+
     user_in_db = await db.execute(select(models.user.User)
                                   .where(models.user.User.username == user_data.username))
 
-    unauthed_exc = HTTPException(
+    unauthed_exc: HTTPException = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="invalid username or password",
     )
@@ -46,10 +51,14 @@ async def validate_user(
 async def get_current_token_payload(
         credentials: Annotated[HTTPAuthorizationCredentials, Depends(settings.security)]
 ) -> dict:
-    token = credentials.credentials
+    """
+    Функция проверяет токен на валидность и возвращает информацию о пользователе если он валиден
+    """
+
+    token: str = credentials.credentials
 
     try:
-        payload = decode_jwt(
+        payload: dict = decode_jwt(
             token=token,
         )
 
@@ -66,11 +75,17 @@ async def get_current_auth_user(
         payload: dict = Depends(get_current_token_payload),
         db: AsyncSession = Depends(get_async_session),
 ) -> models.user.User:
-    username = payload.get("username")
-    user_in_db = await db.execute(select(models.user.User).where(
-        models.user.User.username == username))
-    if (user := user_in_db.one_or_none()) is not None:
-        return user[0]
+    """
+    Функция возвращает авторизованного пользователя
+    """
+
+    username: str = payload.get("username")
+    tg_user_id: int = payload.get("tg_user_id")
+    user_in_db = await models.user.User.get_user_by_username(username=username, tg_user_id=tg_user_id, db=db)
+
+    if user_in_db:
+        return user_in_db
+
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="token invalid (user not found)",
@@ -79,7 +94,11 @@ async def get_current_auth_user(
 
 def get_current_active_auth_user(
         user: schemas.user.UserOutSchema = Depends(get_current_auth_user),
-):
+) -> schemas.user.UserOutSchema:
+    """
+    Функция возвращает активного пользователя
+    """
+
     if user.active:
         return user
     raise HTTPException(
@@ -91,12 +110,15 @@ def get_current_active_auth_user(
 @router.post(path='/login', response_model=schemas.token.TokenInfo)
 async def login(
         user: schemas.user.UserOutSchema = Depends(validate_user)
-):
+) -> schemas.token.TokenInfo:
+    """
+    Функция аутентификации пользователя и создания токена
+    """
+
     jwt_payload = {
         'tg_user_id': user.tg_user_id,
         'username': user.username,
         'password': user.password.decode(),
-        'role': user.role,
     }
 
     token = encode_jwt(jwt_payload)

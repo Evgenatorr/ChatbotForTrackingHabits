@@ -15,9 +15,15 @@ async def reg_user(
         user: schemas.user.CreateUserSchema,
         db: AsyncSession = Depends(get_async_session),
 ):
-    user_in_db = await models.user.User.get_user_by_username(username=user.username,
-                                                             tg_user_id=user.tg_user_id,
-                                                             db=db,)
+    """
+    Функция post запроса, добавляем нового пользователя в базу данных если такого уже нет
+    """
+
+    user_in_db = await models.user.User.get_user_by_username(
+        username=user.username,
+        tg_user_id=user.tg_user_id,
+        db=db,
+    )
 
     if user_in_db is not None:
         raise HTTPException(
@@ -25,11 +31,10 @@ async def reg_user(
             detail="This tg id already exists",
         )
 
-    new_user = models.user.User(
+    new_user: models.user.User = models.user.User(
         tg_user_id=user.tg_user_id,
         username=user.username,
         password=hash_password(user.password),
-        role=user.role,
     )
 
     db.add(new_user)

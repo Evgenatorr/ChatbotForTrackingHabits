@@ -1,7 +1,3 @@
-"""
-Модуль добавление кнопки логин
-"""
-
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
@@ -11,7 +7,7 @@ def login_and_reg_button() -> InlineKeyboardMarkup:
     :return: button
     """
 
-    button = InlineKeyboardMarkup(row_width=1)
+    button: InlineKeyboardMarkup = InlineKeyboardMarkup(row_width=1)
     button.add(
         InlineKeyboardButton('Вход', callback_data='login'),
         InlineKeyboardButton('Регистрация', callback_data='registration')
@@ -19,13 +15,14 @@ def login_and_reg_button() -> InlineKeyboardMarkup:
 
     return button
 
+
 def login_button() -> InlineKeyboardMarkup:
     """
-    Функция в которой добавляются кнопки 'Вход', 'Регистрация'
+    Функция в которой добавляются кнопку 'Вход'
     :return: button
     """
 
-    button = InlineKeyboardMarkup(row_width=1)
+    button: InlineKeyboardMarkup = InlineKeyboardMarkup(row_width=1)
     button.add(
         InlineKeyboardButton('Вход', callback_data='login'),
     )

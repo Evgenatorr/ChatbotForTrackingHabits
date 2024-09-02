@@ -1,3 +1,5 @@
+"""Запуск бота"""
+
 import asyncio
 from telebot.asyncio_filters import StateFilter
 from src.bot.database.database import engine, Base

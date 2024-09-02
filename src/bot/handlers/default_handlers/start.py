@@ -1,29 +1,39 @@
-from os.path import split
-
 from src.loader import bot
 from telebot.types import Message, CallbackQuery
 from src.bot.states.user_state import UserState
 from config import settings
 from src.bot import schemas
-from src.bot.crud.create_token import insert_token_in_dblite
+from src.bot.utils_bot.save_token import insert_token_in_dblite
 from src.bot.keyboards import button_login, button_menu
 import httpx
 
 
 @bot.message_handler(commands=['start'])
 async def send_welcome(message: Message):
+    """
+    Функция ловит команду "/start" и выводит кнопки для входа или регистрации
+    """
+    await bot.delete_state(message.from_user.id)
     await bot.send_message(message.chat.id, f'<strong>Войди | Зарегистрируйся</strong>',
                            reply_markup=button_login.login_and_reg_button())
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'login')
 async def login(call: CallbackQuery):
+    """
+    Функция ловит кнопку входа и просить ввести логин и пароль через пробел
+    """
+
     await bot.set_state(call.from_user.id, UserState.login)
     await bot.send_message(chat_id=call.message.chat.id, text='<i>Введите логин, пароль (Через пробел)</i>')
 
 
 @bot.message_handler(state=UserState.login)
 async def check_login(message: Message):
+    """
+    Функция авторизует пользователя на стороне fast api
+    """
+
     split_data_user = message.text.split()
 
     if len(split_data_user) != 2:
@@ -56,13 +66,20 @@ async def check_login(message: Message):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'registration')
 async def registration(call):
+    """
+    Функция ловит кнопку регистрации и просит пользователя придумать пароль и логин через пробел
+    """
+
     await bot.set_state(call.from_user.id, UserState.registration)
     await bot.send_message(call.from_user.id, '<i>Придумайте логин, пароль (через пробел)</i>')
 
 
 @bot.message_handler(state=UserState.registration)
 async def check_login(message: Message):
-    role = 'admin' if message.from_user.id == int(settings.TG_ADMIN_ID) else 'user'
+    """
+    Функция проверяет есть ли пользователь с таким телеграм айди в базе данных, если нет,
+    то регистрирует нового пользователя и добваляет в базу данных postgres на стороне fast api
+    """
 
     split_data_user = message.text.split()
 
@@ -74,7 +91,6 @@ async def check_login(message: Message):
         'username': split_data_user[0],
         'password': split_data_user[1],
         'tg_user_id': message.from_user.id,
-        'role': role,
     }
 
     async with httpx.AsyncClient() as client:

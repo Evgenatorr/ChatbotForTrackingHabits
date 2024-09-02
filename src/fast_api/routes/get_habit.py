@@ -16,11 +16,15 @@ async def get_habit(
         payload: dict = Depends(get_current_token_payload),
         db: AsyncSession = Depends(get_async_session),
 ):
-    unauthed_exc = HTTPException(
+    """
+    Функция get запроса для получения привычки
+    """
+
+    unauthed_exc: HTTPException = HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail="object not found",
     )
-    tg_user_id = payload.get('tg_user_id')
+    tg_user_id: int = payload.get('tg_user_id')
     habit_in_db = await models.habit.Habit.get_habit_by_title(habit_title, tg_user_id, db=db)
 
     if habit_in_db is None:

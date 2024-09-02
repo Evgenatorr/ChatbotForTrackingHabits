@@ -10,6 +10,9 @@ async def read_users(
         payload: dict = Depends(get_current_token_payload),
         user: schemas.user.UserOutSchema = Depends(get_current_active_auth_user),
 ):
+    """
+    Функция get запроса для авторизации пользователя на фронте telebot
+    """
 
     iat = payload.get('iat')
 
@@ -18,4 +21,3 @@ async def read_users(
         "tg_user_id": user.tg_user_id,
         "logged_in_at": iat,
     }
-

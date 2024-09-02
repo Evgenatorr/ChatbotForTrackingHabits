@@ -8,5 +8,6 @@ async def bot_help(message: Message):
     """
     Функция, которая ловит команду /help и выводит пользователю список всех команд
     """
+
     text = [f"<i>/{command} - {desk}</i>" for command, desk in settings.bot.default_commands]
     await bot.reply_to(message, "\n".join(text))

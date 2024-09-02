@@ -21,5 +21,9 @@ class Token(Base):
 
     @classmethod
     async def get_token_by_user_id(cls, user_tg_id: int):
+        """
+        Функция для получения токена по tg id user из таблицы sqlite на стороне бота
+        """
+
         token = await async_session.execute(select(cls).where(user_tg_id == cls.user_tg_id))
         return token.scalar()

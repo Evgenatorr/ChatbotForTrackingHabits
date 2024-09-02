@@ -11,7 +11,7 @@ def edit_button() -> InlineKeyboardMarkup:
     :return: button
     """
 
-    button = InlineKeyboardMarkup(row_width=1)
+    button: InlineKeyboardMarkup = InlineKeyboardMarkup(row_width=1)
     button.add(
         InlineKeyboardButton('О привычке', callback_data='info_habit'),
         InlineKeyboardButton('Выполнить привычку', callback_data='performing_habit'),

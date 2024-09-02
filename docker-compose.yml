@@ -47,17 +47,6 @@ services:
       - .:/code
     networks:
       - backend
-#    links:
-#      - fastapi
-
-#  cron_run:
-#    container_name: "cron_run"
-#    build: ./scheduler
-#    command: cron -n
-#    depends_on:
-#      - bot
-#    networks:
-#      - backend
 
 networks:
   backend:

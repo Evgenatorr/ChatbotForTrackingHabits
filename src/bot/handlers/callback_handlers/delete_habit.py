@@ -1,3 +1,5 @@
+from httpx import Response
+
 from src.loader import bot
 from telebot.types import CallbackQuery
 from src.bot.utils_bot.get_user_jwt import get_header
@@ -10,17 +12,24 @@ import httpx
 
 @bot.callback_query_handler(func=lambda call: call.data == 'delete_habit', state=EditHabitState.edite)
 async def delete_habit(call: CallbackQuery):
-    header = await get_header(call.from_user.id)
+    """
+    Функция удаляет привычку из базы данных postgres на стороне fast api
+    и удаляет напоминание этой привычки, если установлено
+    """
+
+    header: dict[str, str] | None = await get_header(call.from_user.id)
+
     async with bot.retrieve_data(call.from_user.id) as data:
-        title_habit = data['title_habit']
-        del_msg_id = data['massage_id']
-        del_chat_id = data['chat_id']
+        title_habit: str = data['title_habit']
+        del_msg_id: int = data['massage_id']
+        del_chat_id: int = data['chat_id']
     await bot.delete_message(message_id=del_msg_id, chat_id=del_chat_id)
 
     if header:
         async with httpx.AsyncClient() as client:
-            response = await client.delete(f'{settings.BASE_URL}/jwt/habit/delete/{title_habit}',
-                                          headers=header)
+            response: Response = await client.delete(f'{settings.BASE_URL}/jwt/habit/delete/{title_habit}',
+                                                     headers=header)
+
         if response.status_code == 204:
             if job := scheduler.get_job(job_id=f'{title_habit}'):
                 job.remove()

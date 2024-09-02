@@ -1,9 +1,38 @@
-```shell
-# Generate an RSA private key, of size 2048
-openssl genrsa -out jwt-private.pem 2048
-```
+# Chatbot for tracking habits
 
-```shell
-# Extract the public key from the key pair, which can be used in a certificate
-openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
-```
+#### Сервис, дающий пользователям возможность эффективно управлять своими привычками через бот в Telegram.
+
+## Функционал приложения
+
+#### Основные функции приложения на стороне frontend (телеграм-бот):
+
+* Добавление и удаление привычек, полный функционал по редактированию;
+* Функция фиксации выполнения привычки;
+* Напоминание о необходимости выполнить привычку.
+
+#### Основная функция сервисного скрипта:
+
+* Оповещение пользователя в заданное время.
+
+#### Основные функции приложения на стороне backend (FastAPI):
+
+* Хранение и обработка данных, полученных от пользователя (запросы из телеграм-бота);
+* Аутентификация и авторизация пользователя для доступа к данным.
+
+
+## Запуск проекта
+
+* Создать в корне проекта папку 'certs'
+* В папке 'certs' создать публичный, приватный ключ:
+
+      openssl genrsa -out jwt-private.pem 2048
+      openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
+
+* Создать файл '.env' и заполнить его по примеру файла '.env.template'
+* Подгрузить все библиотеки из [pyproject.toml](pyproject.toml):
+
+      poetry install
+
+* Запускаем проект:
+
+      docker compose up

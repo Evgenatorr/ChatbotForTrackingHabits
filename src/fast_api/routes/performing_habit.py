@@ -1,12 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import delete
 from src.fast_api.database.database import get_async_session
-from .login_user import get_current_token_payload, get_current_active_auth_user
-from src.fast_api.schemas.habit import SetReminderSchema, HabitTrackingSchema
+from .login_user import get_current_token_payload
 from src.fast_api.database import models
-
-
 
 router = APIRouter(prefix='/jwt', tags=['JWT'])
 
@@ -20,6 +16,11 @@ async def performing_habit(
         db: AsyncSession = Depends(get_async_session),
         payload: dict = Depends(get_current_token_payload),
 ):
+    """
+    Функция patch запроса для выполнения привычки, прибавляем счетчик выполнения привычки в базе данных
+    и удаляем привычку если счетчик больше 20
+    """
+
     notfound_exc = HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail="Object not found",
@@ -30,8 +31,8 @@ async def performing_habit(
         detail="Object deleted",
     )
 
-    tg_user_id = payload.get('tg_user_id')
-    habit_in_db: models.habit.Habit = await models.habit.Habit.get_habit_by_title(habit_title, tg_user_id, db=db)
+    tg_user_id: int = payload.get('tg_user_id')
+    habit_in_db = await models.habit.Habit.get_habit_by_title(habit_title, tg_user_id, db=db)
 
     if habit_in_db is None:
         raise notfound_exc

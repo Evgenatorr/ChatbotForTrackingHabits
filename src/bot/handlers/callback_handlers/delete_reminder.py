@@ -9,8 +9,13 @@ from httpx import Response
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'delete_reminder', state=EditHabitState.edite)
-async def reminder(call: CallbackQuery):
-    header = await get_header(call.from_user.id)
+async def delete_reminder(call: CallbackQuery) -> None:
+    """
+    Функция удаляет напоминание у привычки из хранилища задач "apscheduler"
+    и меняет значение alert_time в таблице tracking_habit на стороне fast api на null
+    """
+
+    header: dict[str, str] | None = await get_header(call.from_user.id)
 
     if header:
         async with bot.retrieve_data(call.from_user.id) as data:

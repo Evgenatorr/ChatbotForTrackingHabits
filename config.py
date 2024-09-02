@@ -61,7 +61,6 @@ class Settings(BaseSettings):
     BASE_URL: str = f'http://{BASE_HOST}:{BASE_PORT}'
     BOT_TOKEN: str = os.getenv('BOT_TOKEN')
     BASE_DIR: str = os.path.dirname(__name__)
-    TG_ADMIN_ID: str = os.getenv('TG_ADMIN_ID')
     api_v1_prefix: str = "/api/v1"
     security: HTTPBearer = HTTPBearer()
     auth_jwt: AuthJWT = AuthJWT()
