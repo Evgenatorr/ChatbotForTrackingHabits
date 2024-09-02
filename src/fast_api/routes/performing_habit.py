@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.fast_api.database import models
 from src.fast_api.database.database import get_async_session
 from .login_user import get_current_token_payload
+from src.fast_api.database import models
+from config import settings
 
 router = APIRouter(prefix='/jwt', tags=['JWT'])
 
@@ -19,7 +19,8 @@ async def performing_habit(
 ):
     """
     Функция patch запроса для выполнения привычки, прибавляем счетчик выполнения привычки в базе данных
-    и удаляем привычку если счетчик больше 20
+    и удаляем привычку если счетчик больше total_count(количество выполнения
+    привычки перед тем как она будет удалена, настраивается в 'config.py')
     """
 
     notfound_exc = HTTPException(
@@ -40,7 +41,7 @@ async def performing_habit(
 
     habit_in_db.tracking_habit[0].count += 1
 
-    if habit_in_db.tracking_habit[0].count > 20:
+    if habit_in_db.tracking_habit[0].count >= settings.total_count:
         await db.delete(habit_in_db)
         await db.commit()
         raise no_content_exc

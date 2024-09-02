@@ -4,13 +4,12 @@ from sqlalchemy import (
     String,
     select,
 )
-
 from src.bot.database.database import Base, async_session
 
 
 class Token(Base):
     """
-    Модель списка токенов
+    Модель токенов
     """
 
     __tablename__: str = 'tokens'

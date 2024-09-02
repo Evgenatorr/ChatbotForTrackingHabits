@@ -1,9 +1,8 @@
-from sqlalchemy import Column, select
-from sqlalchemy.dialects.postgresql import VARCHAR, INTEGER, BOOLEAN, BYTEA, BIGINT
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import relationship
-
 from src.fast_api.database.database import Base
+from sqlalchemy import Column, ForeignKey, select, Time
+from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import VARCHAR, INTEGER, BOOLEAN, BYTEA, BIGINT
 
 
 class User(Base):

@@ -2,10 +2,11 @@ import httpx
 from httpx import Response
 from telebot.types import CallbackQuery
 
-from config import settings
 from src.bot.states.edit_habit_states import EditHabitState
 from src.bot.utils_bot.get_user_jwt import get_header
-from src.loader import bot
+from src.loader import bot, scheduler
+from src.bot.keyboards.button_menu import menu_button
+from config import settings
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'performing_habit', state=EditHabitState.edite)
@@ -27,9 +28,16 @@ async def performing_habit(call: CallbackQuery):
                                                     headers=header)
 
         if response.status_code == 204:
-            await bot.send_message(call.message.chat.id, '<i>Ваша привычка выполнена 21 день</i>')
+
+            if job := scheduler.get_job(job_id=f'{title_habit}'):
+                job.remove()
+
             await bot.delete_message(message_id=del_msg_id, chat_id=del_chat_id)
+            await bot.send_message(call.message.chat.id, f'<i>Привычка {title_habit} выполнена!</i>',
+                                   reply_markup=menu_button())
+            await bot.delete_state(user_id=call.from_user.id)
             return
 
-        count_day: int = 21 - response.json()['tracking_habit'][0]['count']
-        await bot.send_message(call.message.chat.id, f'<i>Осталось: {count_day} дней</i>')
+        total_count: int = settings.total_count - response.json()['tracking_habit'][0]['count']
+        await bot.send_message(call.message.chat.id, f'<i>Привычку "{title_habit}" осталось выполнить '
+                                                     f'{total_count} раз</i>')

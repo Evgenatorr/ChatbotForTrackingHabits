@@ -29,9 +29,12 @@ async def get_info_habit(call: CallbackQuery):
         alert_time: datetime.time | str = parse(response.json()['tracking_habit'][0]['alert_time']).time() \
             if response.json()['tracking_habit'][0]['alert_time'] else 'Не установлено'
 
+        complete_count: int = settings.total_count - response.json()['tracking_habit'][0]['count']
+
         text = (f'<i>Название:</i> <strong>"{response.json()['title']}"</strong>\n'
                 f'<i>Описание:</i> <strong>"{response.json()['description']}"</strong>\n'
                 f'<i>Время ежедневного напоминания:</i> <strong>"{alert_time}"</strong>\n'
-                f'<i>Выполнено:</i> <strong>{response.json()['tracking_habit'][0]['count']} дней</strong>')
+                f'<i>Выполнено:</i> <strong>{response.json()['tracking_habit'][0]['count']} раз</strong>\n'
+                f'<i>Осталось выполнить:</i> <strong>{complete_count} раз</strong>')
 
         await bot.send_message(call.message.chat.id, text)

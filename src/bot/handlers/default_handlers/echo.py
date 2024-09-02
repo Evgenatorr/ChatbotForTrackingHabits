@@ -1,6 +1,5 @@
-from telebot.types import Message
-
 from src.loader import bot
+from telebot.types import Message
 
 
 @bot.message_handler(func=lambda message: True)

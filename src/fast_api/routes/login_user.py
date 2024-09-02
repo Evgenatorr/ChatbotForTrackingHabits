@@ -1,15 +1,14 @@
-from typing import Annotated
-
-from fastapi import Depends, HTTPException, status, APIRouter
-from fastapi.security import OAuth2PasswordRequestForm, HTTPAuthorizationCredentials
-from jwt.exceptions import InvalidTokenError
 from sqlalchemy import select
-
-from config import settings
-from src.fast_api import models
-from src.fast_api import schemas
+from typing import Annotated
+from fastapi import Depends, HTTPException, status, APIRouter
+from jwt.exceptions import InvalidTokenError
 from src.fast_api.database.database import get_async_session, AsyncSession
+from config import settings
+from fastapi.security import OAuth2PasswordRequestForm, HTTPAuthorizationCredentials
 from src.fast_api.utils.jwt_utils import encode_jwt, decode_jwt, validate_password
+from src.fast_api import schemas
+from src.fast_api import models
+
 
 router = APIRouter(prefix='/jwt', tags=['JWT'])
 

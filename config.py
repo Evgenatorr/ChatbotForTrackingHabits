@@ -1,10 +1,9 @@
 import os
-from pathlib import Path
-
 from dotenv import load_dotenv
-from fastapi.security import HTTPBearer
-from pydantic import BaseModel
 from pydantic_settings import BaseSettings
+from pydantic import BaseModel
+from pathlib import Path
+from fastapi.security import HTTPBearer
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 
@@ -51,16 +50,17 @@ class Bot(BaseModel):
         ("help", "Вывести справку"),
         ("menu", 'Меню')
     )
+    BOT_TOKEN: str = os.getenv('BOT_TOKEN')
 
 
 class Settings(BaseSettings):
     """
-    Base settings for programm.
+    Base settings for program.
     """
+    total_count: int = 21  # установить сколько раз нужно выполнить привычку до её удаления
     BASE_HOST: str = 'fastapi'
     BASE_PORT: str = '8000'
     BASE_URL: str = f'http://{BASE_HOST}:{BASE_PORT}'
-    BOT_TOKEN: str = os.getenv('BOT_TOKEN')
     BASE_DIR: str = os.path.dirname(__name__)
     api_v1_prefix: str = "/api/v1"
     security: HTTPBearer = HTTPBearer()
