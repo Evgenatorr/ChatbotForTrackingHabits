@@ -1,9 +1,10 @@
 import os
-from dotenv import load_dotenv
-from pydantic_settings import BaseSettings
-from pydantic import BaseModel
 from pathlib import Path
+
+from dotenv import load_dotenv
 from fastapi.security import HTTPBearer
+from pydantic import BaseModel
+from pydantic_settings import BaseSettings
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 

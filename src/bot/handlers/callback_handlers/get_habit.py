@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from src.loader import bot
-from telebot.types import CallbackQuery
-from src.bot.utils_bot.get_user_jwt import get_header
-
-from src.bot.states.edit_habit_states import EditHabitState
-from dateutil.parser import parse
-from config import settings
 import httpx
+from dateutil.parser import parse
+from telebot.types import CallbackQuery
+
+from config import settings
+from src.bot.states.edit_habit_states import EditHabitState
+from src.bot.utils_bot.get_user_jwt import get_header
+from src.loader import bot
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'info_habit', state=EditHabitState.edite)

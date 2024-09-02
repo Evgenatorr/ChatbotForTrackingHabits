@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import delete
-from src.fast_api.database.database import get_async_session
-from .login_user import get_current_token_payload, get_current_active_auth_user
-from src.fast_api.schemas.habit import HabitUpdateSchema, HabitPublicSchema
-from src.fast_api.database import models
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.fast_api.database import models
+from src.fast_api.database.database import get_async_session
+from .login_user import get_current_token_payload
 
 router = APIRouter(prefix='/jwt', tags=['JWT'])
 

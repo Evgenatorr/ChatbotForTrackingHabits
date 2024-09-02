@@ -1,8 +1,9 @@
-from src.fast_api.database.database import Base
-from sqlalchemy import Column, ForeignKey, select, Time, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey, select, DateTime
 from sqlalchemy.dialects.postgresql import VARCHAR, INTEGER, BIGINT
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import relationship
+
+from src.fast_api.database.database import Base
 
 
 class Habit(Base):

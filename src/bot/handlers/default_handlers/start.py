@@ -1,11 +1,12 @@
-from src.loader import bot
+import httpx
 from telebot.types import Message, CallbackQuery
-from src.bot.states.user_state import UserState
+
 from config import settings
 from src.bot import schemas
-from src.bot.utils_bot.save_token import insert_token_in_dblite
 from src.bot.keyboards import button_login, button_menu
-import httpx
+from src.bot.states.user_state import UserState
+from src.bot.utils_bot.save_token import insert_token_in_dblite
+from src.loader import bot
 
 
 @bot.message_handler(commands=['start'])

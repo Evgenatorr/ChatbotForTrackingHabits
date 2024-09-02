@@ -4,6 +4,7 @@ from sqlalchemy import (
     String,
     select,
 )
+
 from src.bot.database.database import Base, async_session
 
 

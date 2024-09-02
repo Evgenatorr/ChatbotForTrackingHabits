@@ -1,11 +1,12 @@
-from src.loader import bot
-from telebot.types import CallbackQuery
-from src.bot.utils_bot.get_user_jwt import get_header
-from src.bot.states.edit_habit_states import EditHabitState
-from config import settings
-from src.loader import scheduler
 import httpx
 from httpx import Response
+from telebot.types import CallbackQuery
+
+from config import settings
+from src.bot.states.edit_habit_states import EditHabitState
+from src.bot.utils_bot.get_user_jwt import get_header
+from src.loader import bot
+from src.loader import scheduler
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'delete_reminder', state=EditHabitState.edite)

@@ -1,10 +1,10 @@
-from httpx import Response
-from typing import Any, Coroutine
-from src.bot.database import models
 import httpx
+from httpx import Response
+
 from config import settings
-from src.loader import bot
+from src.bot.database import models
 from src.bot.keyboards import button_login
+from src.loader import bot
 
 
 async def get_header(user_tg_id: int) -> dict[str, str] | None:

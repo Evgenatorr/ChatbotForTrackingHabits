@@ -1,7 +1,9 @@
 """Запуск бота"""
 
 import asyncio
+
 from telebot.asyncio_filters import StateFilter
+
 from src.bot.database.database import engine, Base
 from src.bot.utils_bot.set_bot_commands import set_default_commands
 from src.loader import bot, scheduler

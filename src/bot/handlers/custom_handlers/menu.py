@@ -1,7 +1,8 @@
 from telebot.types import Message, CallbackQuery
-from src.loader import bot
+
 from src.bot.keyboards import button_menu
 from src.bot.utils_bot.get_user_jwt import get_header
+from src.loader import bot
 
 
 @bot.message_handler(commands=['menu'])

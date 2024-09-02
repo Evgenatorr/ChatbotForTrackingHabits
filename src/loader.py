@@ -1,8 +1,8 @@
-from sqlalchemy.util import await_only
 from telebot.async_telebot import AsyncTeleBot, StateMemoryStorage
 from fastapi import FastAPI
+from telebot.async_telebot import AsyncTeleBot, StateMemoryStorage
+
 from config import settings
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from src.fast_api.routes import (
     registration_user,
     get_info_user,
@@ -16,7 +16,6 @@ from src.fast_api.routes import (
     set_reminder,
     performing_habit,
 )
-
 
 scheduler: AsyncIOScheduler = AsyncIOScheduler()  # фоновый планировщик задач
 storage: StateMemoryStorage = StateMemoryStorage()

@@ -1,6 +1,6 @@
-from src.bot.database.database import async_session
-from src.bot.database import models
 from src.bot import schemas
+from src.bot.database import models
+from src.bot.database.database import async_session
 
 
 async def insert_token_in_dblite(token: schemas.token.CreateToken):

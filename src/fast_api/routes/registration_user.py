@@ -1,11 +1,9 @@
 from fastapi import Depends, HTTPException, status, APIRouter
-from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
 
+from src.fast_api import models
+from src.fast_api import schemas
 from src.fast_api.database.database import get_async_session, AsyncSession
 from src.fast_api.utils.jwt_utils import hash_password
-from src.fast_api import schemas
-from src.fast_api import models
 
 router = APIRouter(tags=['Registration'])
 

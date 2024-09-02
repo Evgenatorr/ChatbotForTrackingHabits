@@ -1,14 +1,15 @@
-from src.loader import bot
-from telebot.types import CallbackQuery, Message
-from src.bot.utils_bot.get_user_jwt import get_header
-from src.bot.states.edit_habit_states import EditHabitState
-from config import settings
-from src.loader import scheduler
-from src.scheduler.scheduler import reminder_task
 import httpx
 import pytz
-from httpx import Response
 from dateutil.parser import parse
+from httpx import Response
+from telebot.types import CallbackQuery, Message
+
+from config import settings
+from src.bot.states.edit_habit_states import EditHabitState
+from src.bot.utils_bot.get_user_jwt import get_header
+from src.loader import bot
+from src.loader import scheduler
+from src.scheduler.scheduler import reminder_task
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'set_reminder', state=EditHabitState.edite)

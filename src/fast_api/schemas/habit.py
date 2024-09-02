@@ -1,5 +1,6 @@
-from pydantic import BaseModel, Field, AwareDatetime
 from typing import Optional
+
+from pydantic import BaseModel, Field, AwareDatetime
 
 
 class BaseHabitSchema(BaseModel):
