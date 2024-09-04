@@ -59,7 +59,9 @@ async def save_description(message: Message) -> None:
                                       json=data,
                                       headers=header)
 
-    await bot.send_message(message.chat.id, '<i>Вы изменили описание привычки</i>')
+    if response.status_code == 200:
+        await bot.send_message(message.chat.id, '<i>Вы изменили описание привычки</i>')
+        await bot.delete_state(message.from_user.id)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'edit_title', state=EditHabitState.edite)
@@ -93,6 +95,11 @@ async def save_title(message: Message) -> None:
         response: Response = await client.patch(f'{settings.BASE_URL}/jwt/habit/update/{title_habit}',
                                                 json=habit_data,
                                                 headers=header)
+
+    if response.status_code == 409:
+        await bot.send_message(message.chat.id, '<i>Привычка с таким название уже существует\n'
+                                                'Введите новое название</i>')
+        return
 
     if job := scheduler.get_job(job_id=f'{title_habit}'):
         job.modify(id=new_title)
