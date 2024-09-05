@@ -10,7 +10,6 @@ from src.fast_api.database.database import get_async_session
 from .login_user import get_current_token_payload
 from src.fast_api.schemas.habit import SetReminderSchema, HabitTrackingSchema
 from src.fast_api.database import models
-import pytz
 
 
 router = APIRouter(prefix='/jwt', tags=['Patch'])
