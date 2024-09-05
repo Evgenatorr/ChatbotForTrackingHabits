@@ -1,5 +1,5 @@
 from typing import Optional
-
+from datetime import time
 from pydantic import BaseModel, Field, AwareDatetime
 
 
@@ -15,7 +15,8 @@ class HabitUpdateSchema(BaseModel):
 
 class HabitTrackingSchema(BaseModel):
     habit_id: int = Field(description='Habit id')
-    alert_time: AwareDatetime | None = Field(description='Habit alert time')
+    # alert_time: AwareDatetime | None = Field(description='Habit alert time')
+    alert_time: time | None = Field(description='Habit alert time')
     count: int = Field(description='Habit completion days counter')
 
 
@@ -26,4 +27,5 @@ class HabitPublicSchema(BaseHabitSchema):
 
 
 class SetReminderSchema(BaseModel):
-    alert_time: str | AwareDatetime | None = Field(description='Habit alert time')
+    # alert_time: str | AwareDatetime | None = Field(description='Habit alert time')
+    alert_time: str | time | None = Field(description='Habit alert time')

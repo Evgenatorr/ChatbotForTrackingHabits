@@ -103,6 +103,10 @@ async def check_login(message: Message):
         await bot.delete_state(message.from_user.id, message.chat.id)
         return
 
+    if response.status_code == 400:
+        await bot.send_message(message.chat.id, f'<i>Такой логин уже существует\nПопробуй ещё раз</i>')
+        return
+
     await bot.send_message(message.from_user.id, '<strong>Вы успешно зарегистрировались</strong>',
                            reply_markup=button_login.login_button())
     await bot.delete_state(message.from_user.id, message.chat.id)

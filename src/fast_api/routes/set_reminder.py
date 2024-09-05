@@ -55,8 +55,9 @@ async def add_reminder(
         return habit_in_db.tracking_habit[0]
 
     try:
-        reminder_data.alert_time = datetime.strptime(reminder_data.alert_time, '%H:%M').replace(
-            tzinfo=pytz.timezone('Asia/Novosibirsk'))
+        # reminder_data.alert_time = datetime.strptime(reminder_data.alert_time, '%H:%M').replace(
+        #     tzinfo=pytz.timezone('Asia/Novosibirsk'))
+        reminder_data.alert_time = datetime.strptime(reminder_data.alert_time, '%H:%M').time()
     except ValueError:
         raise value_time_exc
 

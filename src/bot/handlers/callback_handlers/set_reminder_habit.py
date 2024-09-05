@@ -59,7 +59,8 @@ async def save_time(message: Message):
         job.reschedule('cron', hour=alert_time.hour,
                        minute=alert_time.minute,
                        timezone=pytz.timezone('Asia/Novosibirsk'))
-        await bot.send_message(message.chat.id, f'<i>Вы изменили время напоминания на привычку "{title_habit}"\n'
+        await bot.send_message(message.chat.id, f'<i>Вы изменили время ежедневного напоминания '
+                                                f'на привычку "{title_habit}"\n'
                                                 f'Время напоминания:</i> <strong>{alert_time.time()}</strong>')
 
         await bot.set_state(message.from_user.id, state=EditHabitState.edite)
@@ -70,7 +71,8 @@ async def save_time(message: Message):
                       timezone=pytz.timezone('Asia/Novosibirsk'), args=(message.chat.id, title_habit,),
                       id=f'{title_habit}')
 
-    await bot.send_message(message.chat.id, f'<i>Вы установили ежедневное напоминание на привычку "{title_habit}"\n'
-                                            f'Время ежедневного напоминания:</i> <strong>{alert_time.time()}</strong>')
+    await bot.send_message(message.chat.id, f'<i>Вы установили ежедневное напоминание '
+                                            f'на привычку "{title_habit}"\n'
+                                            f'Время напоминания:</i> <strong>{alert_time.time()}</strong>')
 
     await bot.set_state(message.from_user.id, state=EditHabitState.edite)

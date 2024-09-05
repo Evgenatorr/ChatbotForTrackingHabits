@@ -17,7 +17,7 @@ class User(Base):
     habits = relationship(argument='Habit', back_populates='user')
 
     @classmethod
-    async def get_user_by_username(cls, username: str, tg_user_id: int, db: AsyncSession):
+    async def get_user_by_username_and_tg(cls, username: str, tg_user_id: int, db: AsyncSession):
         """
         Функция получения пользователя по логину(username)
         """
@@ -29,3 +29,32 @@ class User(Base):
         )
 
         return user.scalar()
+
+    @classmethod
+    async def get_user_by_tg_id(cls, tg_user_id: int, db: AsyncSession):
+        """
+        Функция получения пользователя по логину(username)
+        """
+
+        user = await db.execute(
+            select(cls).where(
+                cls.tg_user_id == tg_user_id
+            )
+        )
+
+        return user.scalar()
+
+    @classmethod
+    async def get_user_by_username(cls, username: str, db: AsyncSession):
+        """
+        Функция получения пользователя по логину(username)
+        """
+
+        user = await db.execute(
+            select(cls).where(
+                cls.username == username
+            )
+        )
+
+        return user.scalar()
+

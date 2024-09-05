@@ -81,7 +81,7 @@ async def get_current_auth_user(
 
     username: str = payload.get("username")
     tg_user_id: int = payload.get("tg_user_id")
-    user_in_db = await models.user.User.get_user_by_username(username=username, tg_user_id=tg_user_id, db=db)
+    user_in_db = await models.user.User.get_user_by_username_and_tg(username=username, tg_user_id=tg_user_id, db=db)
 
     if user_in_db:
         return user_in_db

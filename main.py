@@ -1,5 +1,7 @@
 """Запуск бота"""
 
+import time
+import os
 import asyncio
 from telebot.asyncio_filters import StateFilter
 from src.bot.database.database import engine, Base
@@ -17,4 +19,6 @@ async def start():
 
 
 if __name__ == '__main__':
+    os.environ['TZ'] = 'UTC'
+    time.tzset()
     asyncio.run(start())

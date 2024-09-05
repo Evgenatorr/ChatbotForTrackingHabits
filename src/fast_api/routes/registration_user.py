@@ -19,16 +19,22 @@ async def reg_user(
     Функция post запроса, добавляем нового пользователя в базу данных если такого уже нет
     """
 
-    user_in_db = await models.user.User.get_user_by_username(
-        username=user.username,
-        tg_user_id=user.tg_user_id,
-        db=db,
-    )
+    tg_user_id_in_db = await models.user.User.get_user_by_tg_id(
+        tg_user_id=user.tg_user_id, db=db)
 
-    if user_in_db is not None:
+    tg_username_in_db = await models.user.User.get_user_by_username(
+        username=user.username, db=db)
+
+    if tg_user_id_in_db is not None:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="This tg id already exists",
+        )
+
+    if tg_username_in_db is not None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This username already exists",
         )
 
     new_user: models.user.User = models.user.User(

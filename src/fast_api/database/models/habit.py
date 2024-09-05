@@ -65,7 +65,8 @@ class HabitTracking(Base):
 
     id: Column[INTEGER] = Column(INTEGER, primary_key=True)
     habit_id: Column[INTEGER] = Column(INTEGER, ForeignKey('habit.id', ondelete='CASCADE'), nullable=False)
-    alert_time: Column[DateTime] = Column(DateTime(timezone=True))
+    # alert_time: Column[DateTime] = Column(DateTime(timezone=True))
+    alert_time: Column[Time] = Column(Time())
     count: Column[INTEGER] = Column(INTEGER, default=0)
 
     habit = relationship(argument='Habit', back_populates="tracking_habit", lazy='selectin')
