@@ -5,7 +5,7 @@ from .login_user import get_current_token_payload
 from src.fast_api.database import models
 from config import settings
 
-router = APIRouter(prefix='/jwt', tags=['JWT'])
+router = APIRouter(prefix='/jwt', tags=['Patch'])
 
 
 @router.patch(

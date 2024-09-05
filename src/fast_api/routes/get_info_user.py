@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from .login_user import get_current_token_payload, get_current_active_auth_user
 from src.fast_api import schemas
 
-router = APIRouter(prefix='/jwt', tags=['JWT'])
+router = APIRouter(prefix='/jwt', tags=['Get'])
 
 
 @router.get('/user/me')

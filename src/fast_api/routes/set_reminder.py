@@ -13,7 +13,7 @@ from src.fast_api.database import models
 import pytz
 
 
-router = APIRouter(prefix='/jwt', tags=['JWT'])
+router = APIRouter(prefix='/jwt', tags=['Patch'])
 
 
 @router.patch(

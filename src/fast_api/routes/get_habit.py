@@ -7,7 +7,7 @@ from .login_user import get_current_token_payload, get_current_active_auth_user
 from src.fast_api.schemas.habit import BaseHabitSchema, HabitPublicSchema
 from src.fast_api.database import models
 
-router = APIRouter(prefix='/jwt', tags=['JWT'])
+router = APIRouter(prefix='/jwt', tags=['Get'])
 
 
 @router.get('/user/me/habit/{habit_title}', response_model=HabitPublicSchema)

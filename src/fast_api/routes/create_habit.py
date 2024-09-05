@@ -6,7 +6,7 @@ from src.fast_api.database.database import get_async_session
 from src.fast_api.schemas.habit import BaseHabitSchema, HabitPublicSchema
 from .login_user import get_current_token_payload
 
-router = APIRouter(prefix='/jwt', tags=['JWT'])
+router = APIRouter(prefix='/jwt', tags=['Post'])
 
 
 @router.post('/habit/create', response_model=HabitPublicSchema, status_code=status.HTTP_201_CREATED)

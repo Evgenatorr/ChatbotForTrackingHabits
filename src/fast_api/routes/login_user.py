@@ -10,7 +10,7 @@ from src.fast_api import schemas
 from src.fast_api import models
 
 
-router = APIRouter(prefix='/jwt', tags=['JWT'])
+router = APIRouter(prefix='/jwt', tags=['Post'])
 
 
 async def validate_user(

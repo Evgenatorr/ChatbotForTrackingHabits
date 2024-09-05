@@ -8,7 +8,7 @@ from src.fast_api.database.database import get_async_session
 from src.fast_api.schemas.habit import HabitUpdateSchema, HabitPublicSchema
 from .login_user import get_current_token_payload
 
-router = APIRouter(prefix='/jwt', tags=['JWT'])
+router = APIRouter(prefix='/jwt', tags=['Patch'])
 
 
 @router.patch('/habit/update/{habit_title}', response_model=HabitPublicSchema)
